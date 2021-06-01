@@ -1,0 +1,7 @@
+celery
+fastapi[all]
+sqlalchemy
+pymysql
+alembic
+psycopg2
+python-dotenv

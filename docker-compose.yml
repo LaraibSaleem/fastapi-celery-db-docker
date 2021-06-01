@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  db:
+    image: mysql/mysql-server:8.0.19
+    command: "--default-authentication-plugin=mysql_native_password"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_USER=laraib
+      - MYSQL_PASSWORD=laraib
+      - MYSQL_DATABASE=example_json
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  broker:
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "5566:5672"
+      #local port 5672 was in use
+
+  web:
+    build: .
+    ports:
+      - 8000:8000
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - .:/code
+    depends_on:
+      - broker
+      - db
+    links:
+      - broker
+
+  worker:
+    build: .
+    command: celery -A backend.celery.worker.celery worker --loglevel=DEBUG
+    volumes:
+      - .:/code
+    depends_on:
+      - web
+      - broker
+
+#if not added, volumes will be deleted on "docker-compose down", or, "docker-compose down -v" (I guess)
+#volumes:
+#  db_data:
+#  external: true
+
+
