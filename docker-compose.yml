@@ -35,6 +35,7 @@ services:
       - db
     links:
       - broker
+    #entrypoint: bash -c "sh entrypoint.sh"
 
   worker:
     build: .
