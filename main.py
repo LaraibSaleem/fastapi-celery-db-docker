@@ -21,7 +21,6 @@ def add_user(user: User):
     if crud.user_exists(user.id):
         raise HTTPException(status_code=400, detail="ID already exists.")
     else:
-
         crud.add_user(user)
     return [user]
 
@@ -29,5 +28,5 @@ def add_user(user: User):
 @app.post("/users/{id}/friends/", response_model=Friends, tags=["User Friends"])
 def add_user_frnd(frnd: Friends, id: str):
     #crud.add_user_frnd(frnd, id)
-    return crud.add_user_frnd(frnd, id)
+    return crud.add_user_frnd(frnd, id) #not really a celery task, will have to wait a little bit - as there was error (of missing values) when [frnd, id] was returned.
     #return [frnd, id]
