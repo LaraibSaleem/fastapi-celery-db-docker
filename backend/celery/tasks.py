@@ -2,7 +2,7 @@ from celery.utils.log import get_task_logger
 #from starlette.responses import JSONResponse
 import logging
 from backend.database import SessionLocal, engine
-from backend.models.user_model import User
+from backend.models.user_model import User, Friends
 from backend.models import user_model
 from .worker import celery
 from datetime import datetime
@@ -17,62 +17,31 @@ celery_log = get_task_logger(__name__)
 
 
 
-# Add USer to Database - Run Asynchronously with celery
+# Add User to Database - Run Asynchronously with celery
 # Example process of long running task
-@celery.task(name="save_data", serializer='json')
-def save_data(self, *user):
-    #print(f"{user}___________________\n\t")
+@celery.task(name="save_user", serializer='json')
+def save_user(self, *user):
     print("**********THIS IS USER OF TASK************", user)
-    '''
-    print(user[0], user[1], user[2], user[3], user[4], user[5],
-                    user[6], user[7], user[8], user[9], user[10])
-    '''
 
     try:
-        date = datetime.now()
-        print("**********DATE************", date)
-
-        '''
-        format_date = datetime.strptime(date, '%M %d, %Y')
-        print("**********FORMAT DATE************", format_date)
-        '''
-        print("**********THIS IS DATA TYPES OF USER OF TASK************")
-        print("user.id", type(user[0]))
-        print("user.index", type(user[1]))
-        print("user.guid", type(user[2]))
-        print("user.isActive", type(user[3]))
-        print("user.balance", type(user[4]))
-        print("user.picture", type(user[5]))
-        print("user.age", type(user[6]))
-        print("user.eyeColor", type(user[7]))
-        #print("user.name", type(user[8]))
-        print("user.company", type(user[8]))
-        print("user.email", type(user[9]))
-        print("user.phone", type(user[10]))
-        print("user.address", type(user[11]))
-        print("user.about,", type(user[12]))
-        print("user.latitude", type(user[13]))
-        print("user.longitude", type(user[14]))
-        print("user.tags", type(user[15]))
-        print("USER TAGS", user[15])
-        print("user.range", type(user[16]))
-        #print("user.friends", type(user[0]))
-        print("user.greeting", type(user[17]))
-        print("user.favoriteFruit", type(user[18]))
 
         '''
         for i in user:
-            print(f"{i}\n\t*****************_____________________ {type(i)}_______****************")
+            print(f"{i}\n\t*****************_____________________ {type(user[i])}_______****************")
         '''
+
+        date = datetime.now()
+        #print("**********DATE************", date)
+        name = {"first": user[8], "last": user[9]}
 
         db_user = User(id=user[0], index=user[1], guid=user[2], isActive=user[3], balance=user[4],
                        picture=user[5], age=user[6], eyeColor=user[7],
-                        #name=user[8],
-                        company=user[8], email=user[9], phone=user[10], address=user[11], about=user[12], registered=date, latitude=user[13], longitude=user[14],
-                        tags=user[15],
-                        range=user[16],
+                        name=name,
+                        company=user[10], email=user[11], phone=user[12], address=user[13], about=user[14], registered=date, latitude=user[15], longitude=user[16],
+                        tags=user[17],
+                        range=user[18],
                         #friends=user[18]
-                        greeting=user[17], favoriteFruit=user[18])
+                        greeting=user[19], favoriteFruit=user[20])
         db = SessionLocal()
         db.add(db_user)
         db.commit()
@@ -82,4 +51,22 @@ def save_data(self, *user):
         print(f"\n\t_____*****_____{ex}_____*****_____\n\t")
         raise ex
     #return JSONResponse(status_code=200, content={"message": "User record has been added."})
-    return {"msg": "Hello!"}
+    return {"msg": "Hello Save User!"}
+
+
+
+@celery.task(name="save_frnds", serializer='json')
+def save_frnds(self, u_id, *frnd):
+    try:
+        print("**********THIS IS FRIENDS and ID of USER OF TASK************", frnd, u_id)
+
+        db_frnd = Friends(id=frnd[0], name=frnd[1], user_id=u_id)
+        db = SessionLocal()
+        db.add(db_frnd)
+        db.commit()
+        db.refresh(db_frnd)
+    except Exception as ex:
+        print(f"\n\t_____*****_____{ex}_____*****_____\n\t")
+        raise ex
+
+    return {"msg": "Hello Save Friends!"}
