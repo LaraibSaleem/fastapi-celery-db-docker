@@ -3,9 +3,17 @@ from backend import crud
 from backend.schemas.user_schema import User, Friends
 from starlette.responses import RedirectResponse
 from typing import List
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import PlainTextResponse
 
 
 app = FastAPI()
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=400)
+
 
 # Home/welcome route
 @app.get("/", tags=["Root"])
