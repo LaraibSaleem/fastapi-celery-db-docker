@@ -27,7 +27,7 @@ services:
     build: .
     ports:
       - 8000:8000
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    #command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - .:/code
     depends_on:
@@ -35,7 +35,7 @@ services:
       - db
     links:
       - broker
-    #entrypoint: bash -c "sh entrypoint.sh"
+    entrypoint: bash -c "sh entrypoint.sh"
 
   worker:
     build: .

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#
-#echo "*************** creating database ****************"
-#alembic create schema example_json if not exists
+
+echo "*************** creating database ****************"
+alembic create schema example_json if not exists
 
 echo "_______________running autogenerate_______________"
 alembic revision --autogenerate -m "Create User Table"
