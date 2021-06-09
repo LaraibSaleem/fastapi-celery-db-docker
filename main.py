@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.logger import logger as fastapi_logger
 from backend import crud
 from backend.schemas.user_schema import User, Friends
 from starlette.responses import RedirectResponse
@@ -24,7 +25,7 @@ def read_root():
 
 @app.post("/users/", response_model=List[User], tags=["User"])
 def add_user(user: User):
-    print("**********THIS IS USER OF MAIN************", user)
+    """User Post API"""
 
     if crud.user_exists(user.id):
         raise HTTPException(status_code=400, detail="ID already exists.")
@@ -33,8 +34,11 @@ def add_user(user: User):
     return [user]
 
 
+
 @app.post("/users/{id}/friends/", response_model=Friends, tags=["User Friends"])
 def add_user_frnd(frnd: Friends, id: str):
+    """Friends Post API"""
+
     #crud.add_user_frnd(frnd, id)
     return crud.add_user_frnd(frnd, id) #not really a celery task, will have to wait a little bit - as there was error (of missing values) when [frnd, id] was returned.
     #return [frnd, id]

@@ -21,7 +21,9 @@ celery_log = get_task_logger(__name__)
 # Example process of long running task
 @celery.task(name="save_user", serializer='json')
 def save_user(self, *user):
-    print("**********THIS IS USER OF TASK************", user)
+    """method to actually save users to database"""
+
+    #print("**********THIS IS USER OF TASK************", user)
 
     try:
 
@@ -57,8 +59,10 @@ def save_user(self, *user):
 
 @celery.task(name="save_frnds", serializer='json')
 def save_frnds(self, u_id, *frnd):
+    """method to actually save friends attribute of users to database"""
+
     try:
-        print("**********THIS IS FRIENDS and ID of USER OF TASK************", frnd, u_id)
+        #print("**********THIS IS FRIENDS and ID of USER OF TASK************", frnd, u_id)
 
         db_frnd = Friends(id=frnd[0], name=frnd[1], user_id=u_id)
         db = SessionLocal()

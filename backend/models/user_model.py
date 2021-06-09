@@ -5,6 +5,8 @@ from ..database import Base
 
 # user model to store users
 class User(Base):
+    """User model/table of database"""
+
     __tablename__ = "User"
 
     id = Column(String(255), primary_key=True, index=True)
@@ -34,6 +36,8 @@ class User(Base):
 
 # friends model to store users' friends
 class Friends(Base):
+    """Friends model/table of database"""
+
     __tablename__ = "Friends"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)

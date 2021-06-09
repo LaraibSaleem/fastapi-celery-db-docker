@@ -3,6 +3,7 @@ from typing import List, Dict
 
 
 class Name(BaseModel):
+    """Name schema used in User schema as an attribute"""
     first: str
     last: str
 
@@ -11,6 +12,7 @@ class Name(BaseModel):
 
 
 class Friends(BaseModel):
+    """Friend schema used in User schema as an attribute"""
     id: int
     name: str
 

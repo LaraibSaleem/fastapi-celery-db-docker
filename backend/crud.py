@@ -5,6 +5,8 @@ from .database import SessionLocal, engine
 
 
 def user_exists(id) -> bool:
+    """user method to check if user id exists"""
+
     db=SessionLocal()
     db_user = db.query(User).filter(User.id == id).first()
     db.close()
@@ -15,14 +17,17 @@ def user_exists(id) -> bool:
 
 
 def add_user(user):
-    print("**********THIS IS USER OF CRUD************", user)
-    tname = "save_user"
+    """add_user method to send the adding-task to celery"""
+
+    #print("**********THIS IS USER OF CRUD************", user)
+
+    task_name = "save_user"
 
     # use delay() method to call the celery task
     # using send_task instead of delay to have task id in result
 
     '''
-    celery.send_task(tname, args=(user.id, user.index, user.guid, user.isActive, user.balance,
+    celery.send_task(task_name, args=(user.id, user.index, user.guid, user.isActive, user.balance,
                                  user.picture, user.age, user.eyeColor,
                                  # user.name,
                                  user.company, user.email, user.phone, user.address, user.about, user.latitude,
@@ -31,7 +36,7 @@ def add_user(user):
                                  user.greeting, user.favoriteFruit))
     '''
 
-    celery.send_task(tname, args=("HELLO ADD USER!", user.id, user.index, user.guid, user.isActive, user.balance,
+    celery.send_task(task_name, args=("HELLO ADD USER!", user.id, user.index, user.guid, user.isActive, user.balance,
                                  user.picture, user.age, user.eyeColor,
                                  user.name.first,
                                  user.name.last,
@@ -45,8 +50,10 @@ def add_user(user):
 
 
 def add_user_frnd(frnd, u_id):
-    print("**********THIS IS FRIENDS and ID of USER OF CRUD************", frnd, u_id)
+    """add_user_frnd method to send the friends-adding-task to celery"""
 
-    tname = "save_frnds"
-    celery.send_task(tname, args=("HELLO ADD USER ITEM", u_id, frnd.id, frnd.name))
+    #print("**********THIS IS FRIENDS and ID of USER OF CRUD************", frnd, u_id)
+
+    task_name = "save_frnds"
+    celery.send_task(task_name, args=("HELLO ADD USER ITEM", u_id, frnd.id, frnd.name))
     #celery.send_task(tname, args=(u_id, frnd.id, frnd.name))
